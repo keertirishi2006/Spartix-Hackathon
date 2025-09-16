@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoTrack - Carbon Footprint Monitor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">🌍</span>
+                    <h1>EcoTrack</h1>
+                </div>
+                <div class="user-profile">
+                    <span class="user-name" id="userName">EcoWarrior</span>
+                    <div class="user-score">
+                        <span id="totalScore">1,250</span> pts
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-tab="dashboard">
+                <span class="tab-icon">📊</span>
+                Dashboard
+            </button>
+            <button class="nav-tab" data-tab="activities">
+                <span class="tab-icon">📝</span>
+                Activities
+            </button>
+            <button class="nav-tab" data-tab="challenges">
+                <span class="tab-icon">🏆</span>
+                Challenges
+            </button>
+            <button class="nav-tab" data-tab="community">
+                <span class="tab-icon">👥</span>
+                Community
+            </button>
+        </nav>
+
+        <!-- Dashboard Tab -->
+        <div class="tab-content active" id="dashboard">
+            <div class="dashboard-grid">
+                <!-- Today's Impact -->
+                <div class="card impact-card">
+                    <h3>Today's Impact</h3>
+                    <div class="impact-value">
+                        <span class="co2-amount" id="todaysCO2">12.5</span>
+                        <span class="co2-unit">kg CO₂</span>
+                    </div>
+                    <div class="impact-comparison">
+                        <span class="comparison-text" id="comparisonText">15% less than yesterday</span>
+                        <div class="trend-indicator up"></div>
+                    </div>
+                </div>
+
+                <!-- Weekly Chart -->
+                <div class="card chart-card">
+                    <h3>Weekly Footprint</h3>
+                    <div class="chart-controls">
+                        <select id="chartPeriod">
+                            <option value="week">Last 7 Days</option>
+                            <option value="month">Last 30 Days</option>
+                            <option value="year">Last 12 Months</option>
+                        </select>
+                        <select id="chartType">
+                            <option value="line">Line Chart</option>
+                            <option value="bar">Bar Chart</option>
+                            <option value="area">Area Chart</option>
+                        </select>
+                    </div>
+                    <canvas id="weeklyChart" width="600" height="300"></canvas>
+                </div>
+
+                <!-- Category Distribution -->
+                <div class="card pie-chart-card">
+                    <h3>Category Distribution</h3>
+                    <div class="chart-container">
+                        <canvas id="pieChart" width="250" height="250"></canvas>
+                        <div class="pie-legend" id="pieLegend"></div>
+                    </div>
+                </div>
+
+                <!-- Monthly Comparison -->
+                <div class="card comparison-card">
+                    <h3>Monthly Comparison</h3>
+                    <canvas id="comparisonChart" width="400" height="200"></canvas>
+                </div>
+
+                <!-- Activity Breakdown -->
+                <div class="card breakdown-card">
+                    <h3>Today's Breakdown</h3>
+                    <div class="breakdown-items">
+                        <div class="breakdown-item">
+                            <span class="category-icon">🚗</span>
+                            <div class="breakdown-info">
+                                <span class="category">Transport</span>
+                                <span class="amount">6.2 kg CO₂</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 62%"></div>
+                            </div>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="category-icon">🍽️</span>
+                            <div class="breakdown-info">
+                                <span class="category">Food</span>
+                                <span class="amount">4.1 kg CO₂</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 41%"></div>
+                            </div>
+                        </div>
+                        <div class="breakdown-item">
+                            <span class="category-icon">⚡</span>
+                            <div class="breakdown-info">
+                                <span class="category">Energy</span>
+                                <span class="amount">2.2 kg CO₂</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 22%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Achievements -->
+                <div class="card achievements-card">
+                    <h3>Recent Achievements</h3>
+                    <div class="achievements-list">
+                        <div class="achievement">
+                            <span class="achievement-icon">🚴</span>
+                            <div class="achievement-info">
+                                <span class="achievement-title">Bike Week Champion</span>
+                                <span class="achievement-date">2 days ago</span>
+                            </div>
+                        </div>
+                        <div class="achievement">
+                            <span class="achievement-icon">🌱</span>
+                            <div class="achievement-info">
+                                <span class="achievement-title">Plant-Based Pioneer</span>
+                                <span class="achievement-date">1 week ago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activities Tab -->
+        <div class="tab-content" id="activities">
+            <div class="activities-header">
+                <h2>Track Your Activities</h2>
+                <button class="btn btn-primary" id="addActivityBtn">+ Add Activity</button>
+            </div>
+
+            <div class="activity-categories">
+                <div class="category-card" data-category="transport">
+                    <div class="category-icon">🚗</div>
+                    <h3>Transport</h3>
+                    <p>Track your daily commute and travel</p>
+                </div>
+                <div class="category-card" data-category="food">
+                    <div class="category-icon">🍽️</div>
+                    <h3>Food</h3>
+                    <p>Monitor your dietary choices</p>
+                </div>
+                <div class="category-card" data-category="energy">
+                    <div class="category-icon">⚡</div>
+                    <h3>Energy</h3>
+                    <p>Track home energy consumption</p>
+                </div>
+                <div class="category-card" data-category="waste">
+                    <div class="category-icon">🗑️</div>
+                    <h3>Waste</h3>
+                    <p>Monitor waste and recycling</p>
+                </div>
+            </div>
+
+            <div class="recent-activities">
+                <h3>Recent Activities</h3>
+                <div class="activities-list" id="activitiesList">
+                    <!-- Activities will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Challenges Tab -->
+        <div class="tab-content" id="challenges">
+            <div class="challenges-header">
+                <h2>Community Challenges</h2>
+                <div class="challenge-filter">
+                    <button class="btn btn-primary" id="createChallengeBtn">Create Challenge</button>
+                    <select id="challengeFilter">
+                        <option value="all">All Challenges</option>
+                        <option value="active">Active</option>
+                        <option value="completed">Completed</option>
+                        <option value="upcoming">Upcoming</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Challenge Stats -->
+            <div class="challenge-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-info">
+                        <div class="stat-number" id="completedChallenges">12</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-info">
+                        <div class="stat-number" id="activeChallenges">3</div>
+                        <div class="stat-label">Active</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🌟</div>
+                    <div class="stat-info">
+                        <div class="stat-number" id="totalPoints">2,450</div>
+                        <div class="stat-label">Points Earned</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-info">
+                        <div class="stat-number" id="streakDays">15</div>
+                        <div class="stat-label">Day Streak</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="active-challenges">
+                <h3>Active Challenges</h3>
+                <div class="challenges-grid">
+                    <div class="challenge-card active">
+                        <div class="challenge-header">
+                            <h4>Car-Free Week</h4>
+                            <span class="challenge-points">500 pts</span>
+                        </div>
+                        <p>Use alternative transportation for 7 consecutive days</p>
+                        <div class="challenge-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 71%"></div>
+                            </div>
+                            <span class="progress-text">5/7 days</span>
+                        </div>
+                        <div class="challenge-participants">
+                            <span>2,847 participants</span>
+                        </div>
+                        <div class="challenge-actions">
+                            <button class="btn btn-secondary btn-small">View Details</button>
+                            <button class="btn btn-primary btn-small">Join Challenge</button>
+                        </div>
+                    </div>
+
+                    <div class="challenge-card">
+                        <div class="challenge-header">
+                            <h4>Plastic-Free Kitchen</h4>
+                            <span class="challenge-points">300 pts</span>
+                        </div>
+                        <p>Eliminate single-use plastics from your kitchen</p>
+                        <div class="challenge-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 25%"></div>
+                            </div>
+                            <span class="progress-text">5/20 items</span>
+                        </div>
+                        <div class="challenge-participants">
+                            <span>1,532 participants</span>
+                        </div>
+                        <div class="challenge-actions">
+                            <button class="btn btn-secondary btn-small">View Details</button>
+                            <button class="btn btn-primary btn-small">Join Challenge</button>
+                        </div>
+                    </div>
+
+                    <div class="challenge-card">
+                        <div class="challenge-header">
+                            <h4>Energy Saver</h4>
+                            <span class="challenge-points">250 pts</span>
+                        </div>
+                        <p>Reduce home energy consumption by 20%</p>
+                        <div class="challenge-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                            <span class="progress-text">0% reduction</span>
+                        </div>
+                        <div class="challenge-participants">
+                            <span>3,412 participants</span>
+                        </div>
+                        <div class="challenge-actions">
+                            <button class="btn btn-secondary btn-small">View Details</button>
+                            <button class="btn btn-primary btn-small">Join Challenge</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Challenges -->
+            <div class="featured-challenges">
+                <h3>Featured Challenges</h3>
+                <div class="featured-grid">
+                    <div class="featured-challenge">
+                        <div class="featured-header">
+                            <span class="featured-badge">WEEKLY</span>
+                            <h4>Zero Waste Weekend</h4>
+                        </div>
+                        <p>Produce zero waste for an entire weekend</p>
+                        <div class="featured-reward">
+                            <span class="reward-points">750 pts</span>
+                            <span class="reward-badge">🏅 Eco Badge</span>
+                        </div>
+                        <div class="featured-timer">
+                            <span>Starts in: <strong>2 days</strong></span>
+                        </div>
+                    </div>
+
+                    <div class="featured-challenge">
+                        <div class="featured-header">
+                            <span class="featured-badge">MONTHLY</span>
+                            <h4>Green Commute Champion</h4>
+                        </div>
+                        <p>Use only eco-friendly transportation for 30 days</p>
+                        <div class="featured-reward">
+                            <span class="reward-points">1,500 pts</span>
+                            <span class="reward-badge">🚴 Transport Master</span>
+                        </div>
+                        <div class="featured-timer">
+                            <span>Starts in: <strong>1 week</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Community Tab -->
+        <div class="tab-content" id="community">
+            <div class="community-header">
+                <h2>Community Leaderboard</h2>
+                <div class="leaderboard-period">
+                    <div class="community-search">
+                        <input type="text" placeholder="Search users..." id="userSearch">
+                        <button class="search-btn">🔍</button>
+                    </div>
+                    <select id="leaderboardPeriod">
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                        <option value="year">This Year</option>
+                        <option value="alltime">All Time</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Community Overview -->
+            <div class="community-overview">
+                <div class="overview-card">
+                    <div class="overview-icon">👥</div>
+                    <div class="overview-content">
+                        <h4>Active Members</h4>
+                        <div class="overview-number">24,567</div>
+                        <div class="overview-change">+234 this week</div>
+                    </div>
+                </div>
+                <div class="overview-card">
+                    <div class="overview-icon">🌍</div>
+                    <div class="overview-content">
+                        <h4>CO₂ Saved Today</h4>
+                        <div class="overview-number">2.4 tons</div>
+                        <div class="overview-change">+15% vs yesterday</div>
+                    </div>
+                </div>
+                <div class="overview-card">
+                    <div class="overview-icon">🏆</div>
+                    <div class="overview-content">
+                        <h4>Active Challenges</h4>
+                        <div class="overview-number">47</div>
+                        <div class="overview-change">12 ending soon</div>
+                    </div>
+                </div>
+                <div class="overview-card">
+                    <div class="overview-icon">⭐</div>
+                    <div class="overview-content">
+                        <h4>Points Distributed</h4>
+                        <div class="overview-number">1.2M</div>
+                        <div class="overview-change">This month</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="leaderboard">
+                <div class="leaderboard-tabs">
+                    <button class="leaderboard-tab active" data-type="global">Global</button>
+                    <button class="leaderboard-tab" data-type="friends">Friends</button>
+                    <button class="leaderboard-tab" data-type="local">Local</button>
+                </div>
+
+                <div class="leaderboard-item top-performer">
+                    <div class="rank">1</div>
+                    <div class="user-info">
+                        <div class="avatar">🏆</div>
+                        <div class="user-details">
+                            <span class="username">EcoChampion</span>
+                            <span class="user-stats">15.2 kg CO₂ saved</span>
+                            <div class="user-badges">
+                                <span class="badge">🌱</span>
+                                <span class="badge">🚴</span>
+                                <span class="badge">♻️</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="score">4,850 pts</div>
+                    <div class="trend">↗️ +120</div>
+                </div>
+
+                <div class="leaderboard-item">
+                    <div class="rank">2</div>
+                    <div class="user-info">
+                        <div class="avatar">🥈</div>
+                        <div class="user-details">
+                            <span class="username">GreenGuru</span>
+                            <span class="user-stats">12.8 kg CO₂ saved</span>
+                            <div class="user-badges">
+                                <span class="badge">🌱</span>
+                                <span class="badge">⚡</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="score">3,720 pts</div>
+                    <div class="trend">↗️ +85</div>
+                </div>
+
+                <div class="leaderboard-item">
+                    <div class="rank">3</div>
+                    <div class="user-info">
+                        <div class="avatar">🥉</div>
+                        <div class="user-details">
+                            <span class="username">EarthSaver</span>
+                            <span class="user-stats">10.5 kg CO₂ saved</span>
+                            <div class="user-badges">
+                                <span class="badge">♻️</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="score">2,990 pts</div>
+                    <div class="trend">↘️ -15</div>
+                </div>
+
+                <div class="leaderboard-item">
+                    <div class="rank">4</div>
+                    <div class="user-info">
+                        <div class="avatar">👤</div>
+                        <div class="user-details">
+                            <span class="username">ClimateHero</span>
+                            <span class="user-stats">9.8 kg CO₂ saved</span>
+                            <div class="user-badges">
+                                <span class="badge">🌱</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="score">2,750 pts</div>
+                    <div class="trend">↗️ +45</div>
+                </div>
+
+                <div class="leaderboard-item">
+                    <div class="rank">5</div>
+                    <div class="user-info">
+                        <div class="avatar">👤</div>
+                        <div class="user-details">
+                            <span class="username">EcoWarrior2024</span>
+                            <span class="user-stats">8.9 kg CO₂ saved</span>
+                        </div>
+                    </div>
+                    <div class="score">2,340 pts</div>
+                    <div class="trend">↗️ +30</div>
+                </div>
+
+                <div class="leaderboard-item current-user">
+                    <div class="rank">47</div>
+                    <div class="user-info">
+                        <div class="avatar">👤</div>
+                        <div class="user-details">
+                            <span class="username">EcoWarrior (You)</span>
+                            <span class="user-stats">3.2 kg CO₂ saved</span>
+                            <div class="user-badges">
+                                <span class="badge">🌱</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="score">1,250 pts</div>
+                    <div class="trend">↗️ +25</div>
+                </div>
+            </div>
+
+            <!-- Community Achievements -->
+            <div class="community-achievements">
+                <h3>Community Achievements</h3>
+                <div class="achievements-timeline">
+                    <div class="achievement-item">
+                        <div class="achievement-date">Today</div>
+                        <div class="achievement-content">
+                            <div class="achievement-icon">🎉</div>
+                            <div class="achievement-text">
+                                <strong>Milestone Reached!</strong> Community saved 1,000 tons of CO₂
+                            </div>
+                        </div>
+                    </div>
+                    <div class="achievement-item">
+                        <div class="achievement-date">2 days ago</div>
+                        <div class="achievement-content">
+                            <div class="achievement-icon">👥</div>
+                            <div class="achievement-text">
+                                <strong>25,000 Members!</strong> Welcome to our newest eco-warriors
+                            </div>
+                        </div>
+                    </div>
+                    <div class="achievement-item">
+                        <div class="achievement-date">1 week ago</div>
+                        <div class="achievement-content">
+                            <div class="achievement-icon">🏆</div>
+                            <div class="achievement-text">
+                                <strong>Challenge Complete!</strong> Car-Free Week had 5,000 participants
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity Modal -->
+        <div class="modal" id="activityModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Add New Activity</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <form id="activityForm">
+                        <div class="form-group">
+                            <label for="activityCategory">Category</label>
+                            <select id="activityCategory" required>
+                                <option value="">Select category</option>
+                                <option value="transport">Transport</option>
+                                <option value="food">Food</option>
+                                <option value="energy">Energy</option>
+                                <option value="waste">Waste</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="activityType">Activity Type</label>
+                            <select id="activityType" required>
+                                <option value="">Select activity</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="activityAmount">Amount</label>
+                            <div class="input-with-unit">
+                                <input type="number" id="activityAmount" required min="0" step="0.1">
+                                <span class="unit" id="activityUnit">km</span>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" id="cancelActivity">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Add Activity</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Challenge Details Modal -->
+        <div class="modal" id="challengeModal">
+            <div class="modal-content large-modal">
+                <div class="modal-header">
+                    <h3 id="challengeTitle">Challenge Details</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="challenge-details">
+                        <div class="challenge-info">
+                            <div class="challenge-description" id="challengeDescription"></div>
+                            <div class="challenge-requirements">
+                                <h4>Requirements</h4>
+                                <ul id="challengeRequirements"></ul>
+                            </div>
+                            <div class="challenge-rewards">
+                                <h4>Rewards</h4>
+                                <div class="rewards-list" id="challengeRewards"></div>
+                            </div>
+                        </div>
+                        <div class="challenge-progress-detail">
+                            <h4>Your Progress</h4>
+                            <div class="progress-visualization">
+                                <canvas id="challengeProgressChart" width="300" height="200"></canvas>
+                            </div>
+                            <div class="progress-stats" id="challengeProgressStats"></div>
+                        </div>
+                    </div>
+                    <div class="challenge-leaderboard">
+                        <h4>Challenge Leaderboard</h4>
+                        <div class="mini-leaderboard" id="challengeLeaderboard"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="leaveChallengeBtn">Leave Challenge</button>
+                    <button class="btn btn-primary" id="joinChallengeBtn">Join Challenge</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
